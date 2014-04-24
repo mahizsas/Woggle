@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
+using Common.Auth.Basic;
 using Data;
+using Data.Infrastructure;
 using Data.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using Web.Host.Models;
 using Web.Host.Providers;
 
 namespace Web.Host
@@ -31,6 +34,8 @@ namespace Web.Host
             };
         }
 
+       
+
         public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
 
         public static string PublicClientId { get; private set; }
@@ -41,6 +46,8 @@ namespace Web.Host
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+            //app.UseBasicAuthentication(new BasicAuthenticationOptions("web.local", ValidateCredentials));
+            //  config.Filters.Add(new BasicAuthenticationFilter("web.local", Validator));
 
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
