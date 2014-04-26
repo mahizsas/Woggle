@@ -1,10 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Data.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -15,7 +15,9 @@ namespace Web.Host.Controllers.Api
 {
     public class AuthenticateRequest
     {
+        [Required]
         public string Username { get; set; }
+        [Required]
         public string Password { get; set; }
     }
 
@@ -25,6 +27,7 @@ namespace Web.Host.Controllers.Api
         public string Expires { get; set; }
     }
 
+    [Authorize]
     public class AccountController : ApiController
     {
         private ApplicationUserManager _userManager;
@@ -40,9 +43,8 @@ namespace Web.Host.Controllers.Api
             }
         }
 
-        [Route("authenticate")]
         [HttpPost]
-        [ActionName("Authenticate")]
+        [Route("api/auth/request_token")]
         [AllowAnonymous]
         public object Authenticate([FromBody]AuthenticateRequest request)
         {
@@ -51,6 +53,7 @@ namespace Web.Host.Controllers.Api
 
             if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
                 return Unauthorized();
+
             var userIdentity = UserManager.FindAsync(user, password).Result;
             if (userIdentity != null)
             {
@@ -88,12 +91,5 @@ namespace Web.Host.Controllers.Api
 
         }
 
-        [Authorize]
-        [HttpGet]
-        [ActionName("GetPrivateData")]
-        public object GetPrivateData()
-        {
-            return new { Message = "Secret information" };
-        }
     }
 }

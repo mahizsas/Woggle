@@ -19,7 +19,7 @@ namespace Tests.Acceptance.Auth
         public void SomeNameForTestss()
         {
             HttpClient client = new HttpClient();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58018/authenticate");
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58018/api/auth/request_token");
             IEnumerable<KeyValuePair<string, string>> formContent = new Dictionary<string, string>()
             {
                 {"username", "AndrewAllison"},
