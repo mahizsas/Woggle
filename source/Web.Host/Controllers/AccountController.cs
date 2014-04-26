@@ -298,7 +298,10 @@ namespace Web.Host.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, Hometown = model.Hometown };
+                var user = new ApplicationUser()
+                {
+                    UserName = model.UserName, Email = model.Email, Hometown = model.Hometown
+                };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
