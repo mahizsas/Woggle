@@ -11,6 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Web.Host.Providers;
@@ -19,6 +20,9 @@ namespace Web.Host
 {
     public partial class Startup
     {
+
+        public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
+
         // Enable the application to use OAuthAuthorization. You can then secure your Web APIs
         static Startup()
         {
@@ -46,6 +50,7 @@ namespace Web.Host
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+            
             //app.UseBasicAuthentication(new BasicAuthenticationOptions("web.local", ValidateCredentials));
             //  config.Filters.Add(new BasicAuthenticationFilter("web.local", Validator));
 

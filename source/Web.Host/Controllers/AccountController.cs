@@ -72,6 +72,7 @@ namespace Web.Host.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
+                    var header = Request.Headers;
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -217,7 +218,7 @@ namespace Web.Host.Controllers
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+     //   [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
             // Request a redirect to the external login provider

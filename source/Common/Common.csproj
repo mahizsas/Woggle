@@ -98,6 +98,8 @@
     <Compile Include="Auth\Basic\BasicAuthenticationOwinMiddleware.cs" />
     <Compile Include="Auth\Common\ActionResultDelegate.cs" />
     <Compile Include="Auth\Basic\BasicAuthenticationExtensions.cs" />
+    <Compile Include="OAuth\OAuthBase.cs" />
+    <Compile Include="OAuth\OAuthMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

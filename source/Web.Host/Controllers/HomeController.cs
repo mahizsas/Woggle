@@ -15,18 +15,7 @@ namespace Web.Host.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View();
 
-            return RedirectToAction("Home", "DashBoard", new { username = User.Identity.GetUserName() });
-        }
-    }
-
-    [Authorize]
-    [RoutePrefix("")]
-    public class DashBoardController : Controller
-    {
-        [Route("{username}")]
-        public ActionResult Home()
-        {
-            return View();
+            return RedirectToAction("Dashboard", "User", new { username = User.Identity.GetUserName() });
         }
     }
 }
