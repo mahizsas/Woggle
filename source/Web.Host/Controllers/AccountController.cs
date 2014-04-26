@@ -105,8 +105,7 @@ namespace Web.Host.Controllers
                 var user = new ApplicationUser()
                 {
                     UserName = model.UserName, 
-                    Email = model.Email, 
-                    Hometown = model.Hometown
+                    Email = model.Email
                 };
 
                 var result = await UserManager.CreateAsync(user, model.Password);
@@ -301,7 +300,7 @@ namespace Web.Host.Controllers
                 }
                 var user = new ApplicationUser()
                 {
-                    UserName = model.UserName, Email = model.Email, Hometown = model.Hometown
+                    UserName = model.UserName, Email = model.Email
                 };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)

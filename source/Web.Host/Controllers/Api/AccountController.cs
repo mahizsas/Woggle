@@ -90,6 +90,5 @@ namespace Web.Host.Controllers.Api
                 return "Unable to resolve user id";
 
         }
-
     }
 }

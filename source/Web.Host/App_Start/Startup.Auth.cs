@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using Common.Auth.Basic;
-using Data;
+using Data.EntityFramework;
 using Data.Infrastructure;
 using Data.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Web.Host.Providers;
@@ -20,8 +14,10 @@ namespace Web.Host
 {
     public partial class Startup
     {
-
         public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
+        public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
+
+        public static string PublicClientId { get; private set; }
 
         // Enable the application to use OAuthAuthorization. You can then secure your Web APIs
         static Startup()
@@ -36,23 +32,14 @@ namespace Web.Host
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
                 AllowInsecureHttp = true
             };
-        }
-
-       
-
-        public static OAuthAuthorizationServerOptions OAuthOptions { get; private set; }
-
-        public static string PublicClientId { get; private set; }
-
+        }   
+        
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context and user manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(WoggleDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            
-            //app.UseBasicAuthentication(new BasicAuthenticationOptions("web.local", ValidateCredentials));
-            //  config.Filters.Add(new BasicAuthenticationFilter("web.local", Validator));
 
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
