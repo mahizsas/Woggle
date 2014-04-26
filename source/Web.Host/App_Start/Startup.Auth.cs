@@ -72,9 +72,9 @@ namespace Web.Host
             //    clientId: "",
             //    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //    consumerKey: "",
-            //    consumerSecret: "");
+            app.UseTwitterAuthentication(
+                consumerKey: "2Q6wL08LDYEVygURwT3oiw",
+                consumerSecret: "ytyfXG8ODV42ZabvI6st7n4kq2Dg1kct2kugXrbn2g");
 
             //app.UseFacebookAuthentication(
             //    appId: "",

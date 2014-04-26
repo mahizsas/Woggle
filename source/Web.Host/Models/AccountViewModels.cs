@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Web.Host.Models
 {
@@ -14,6 +15,11 @@ namespace Web.Host.Models
 
         [Display(Name = "Hometown")]
         public string Hometown { get; set; }
+
+        [Required]
+        [Display(Name = "UserName")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]{3,19}$", ErrorMessage = "UserName must only be letters and numbers and be 4 - 20 characters long")]
+        public string UserName { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -60,6 +66,11 @@ namespace Web.Host.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "UserName")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]{3,19}$", ErrorMessage = "UserName must only be letters and numbers and be 4 - 20 characters long")]
+        public string UserName { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -77,6 +88,7 @@ namespace Web.Host.Models
 
         [Display(Name = "Hometown")]
         public string Hometown { get; set; }
+
     }
 
     public class ResetPasswordViewModel

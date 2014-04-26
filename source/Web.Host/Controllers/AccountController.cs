@@ -96,12 +96,18 @@ namespace Web.Host.Controllers
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
-//        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, Hometown = model.Hometown };
+                var user = new ApplicationUser()
+                {
+                    UserName = model.UserName, 
+                    Email = model.Email, 
+                    Hometown = model.Hometown
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -241,7 +247,7 @@ namespace Web.Host.Controllers
                 // If the user does not have an account, then prompt the user to create an account
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName, Email = loginInfo.Email });
             }
         }
 
