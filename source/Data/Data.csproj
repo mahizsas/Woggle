@@ -111,10 +111,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\IApplicationUserManager.cs" />
+    <Compile Include="Infrastructure\ISessionStore.cs" />
     <Compile Include="Migrations\201404262216275_initial.cs" />
     <Compile Include="Migrations\201404262216275_initial.Designer.cs">
       <DependentUpon>201404262216275_initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Session.cs" />
     <Compile Include="WoggleDbContext.cs" />
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
     <Compile Include="Migrations\Configuration.cs" />

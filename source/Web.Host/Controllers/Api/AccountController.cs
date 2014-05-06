@@ -1,13 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
-using System.Web;
 using System.Web.Http;
 using Data.Infrastructure;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 
@@ -23,38 +20,44 @@ namespace Web.Host.Controllers.Api
 
     public class AuthenticateResponse
     {
-        public string AccessToken { get; set; }
+        public string access_token { get; set; }
         public string Expires { get; set; }
+
+        public HttpStatusCode Status { get; set; }
     }
 
     [Authorize]
     public class AccountController : ApiController
     {
-        private ApplicationUserManager _userManager;
-        public ApplicationUserManager UserManager
+        private readonly ISecureDataFormat<AuthenticationTicket> _accessTokenFormat;
+        public IApplicationUserManager UserManager { get; set; }
+
+        public AccountController()
         {
-            get
-            {
-                return _userManager ?? HttpContext.Current.Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IApplicationUserManager));
+            _accessTokenFormat = Startup.OAuthOptions.AccessTokenFormat;
+        }
+
+        public AccountController(IApplicationUserManager userManager, ISecureDataFormat<AuthenticationTicket> accessTokenFormtFormat = null)
+        {
+            UserManager = userManager;
+            _accessTokenFormat = accessTokenFormtFormat ?? Startup.OAuthOptions.AccessTokenFormat;
         }
 
         [HttpPost]
         [Route("api/auth/request_token")]
         [AllowAnonymous]
-        public object Authenticate([FromBody]AuthenticateRequest request)
+        public AuthenticateResponse Authenticate([FromBody]AuthenticateRequest request)
         {
             var user = request.Username;
             var password = request.Password;
 
             if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
-                return Unauthorized();
+                return new AuthenticateResponse { Status = HttpStatusCode.BadRequest };
+            var findAsync = UserManager.FindAsync(user, password);
+            findAsync.Wait();
 
-            var userIdentity = UserManager.FindAsync(user, password).Result;
+            var userIdentity = findAsync.Result;
             if (userIdentity != null)
             {
                 var identity = new ClaimsIdentity(Startup.OAuthOptions.AuthenticationType);
@@ -68,14 +71,14 @@ namespace Web.Host.Controllers.Api
                 DateTimeOffset expiresUtc = currentUtc.Add(TimeSpan.FromMinutes(30));
                 ticket.Properties.ExpiresUtc = expiresUtc;
 
-                string AccessToken = Startup.OAuthOptions.AccessTokenFormat.Protect(ticket);
-                return Ok(new AuthenticateResponse()
+                string accessToken = _accessTokenFormat.Protect(ticket);
+                return new AuthenticateResponse()
                 {
-                    AccessToken = AccessToken,
+                    access_token = accessToken,
                     Expires = expiresUtc.ToString()
-                });
+                };
             }
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            return new AuthenticateResponse { Status = HttpStatusCode.Unauthorized };
         }
 
         [Authorize]

@@ -11,7 +11,7 @@ namespace Web.Host.Controllers.Api
     public class AuthUserSession
     {
         public string UserName { get; set; }
-        
+
         public string DisplayName { get; set; }
 
         public string EmailAddress { get; set; }
@@ -41,7 +41,13 @@ namespace Web.Host.Controllers.Api
                 _userManager = value;
             }
         }
-        
+
+        [Route("api/test/data")]
+        public object GetData()
+        {
+            return new { data = "SOme" };
+        }
+
         [Route("api/user")]
         public HttpResponseMessage Current()
         {

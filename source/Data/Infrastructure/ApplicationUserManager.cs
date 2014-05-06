@@ -1,4 +1,6 @@
-﻿using Data.EntityFramework;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using Data.EntityFramework;
 using Data.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -7,13 +9,20 @@ using Microsoft.Owin;
 
 namespace Data.Infrastructure
 {
-    // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-
-    public class ApplicationUserManager : UserManager<ApplicationUser>
+    public class ApplicationUserManager : UserManager<ApplicationUser>, IApplicationUserManager
     {
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
+        }
+
+        public async Task<ClaimsPrincipal> ValidateBasiccredentials(string username, string password)
+        {
+            var user = await FindAsync(username, password);
+            if (user == null) return null;
+
+            var identiy = await CreateIdentityAsync(user, "Basic");
+            return new ClaimsPrincipal(identiy);
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)

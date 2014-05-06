@@ -13,9 +13,9 @@ using Xunit;
 
 namespace Tests.Acceptance.Auth
 {
-    public class TestAuth
+    public class TwitterTestAuth
     {
-        [Fact]
+        //[Fact]
         public void SomeNameForTestss()
         {
             HttpClient client = new HttpClient();
@@ -34,13 +34,13 @@ namespace Tests.Acceptance.Auth
 
             HttpRequestMessage get = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58018/api/Me");
             
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.access_token);
 
             var authResponse = client.SendAsync(get).Result;
 
         }
 
-        [Fact]
+        //[Fact]
         public void FactMethodName()
         {
             // You need to set your own keys and screen name
