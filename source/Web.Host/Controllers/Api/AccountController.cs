@@ -1,12 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.Results;
 using Data.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
+using ServiceStack.Common.Web;
 
 namespace Web.Host.Controllers.Api
 {
@@ -47,13 +51,14 @@ namespace Web.Host.Controllers.Api
         [HttpPost]
         [Route("api/auth/request_token")]
         [AllowAnonymous]
-        public AuthenticateResponse Authenticate([FromBody]AuthenticateRequest request)
+        public IHttpActionResult Authenticate([FromBody]AuthenticateRequest request)
         {
             var user = request.Username;
             var password = request.Password;
 
             if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
-                return new AuthenticateResponse { Status = HttpStatusCode.BadRequest };
+                return BadRequest("Username & password must be entered.");
+
             var findAsync = UserManager.FindAsync(user, password);
             findAsync.Wait();
 
@@ -72,13 +77,17 @@ namespace Web.Host.Controllers.Api
                 ticket.Properties.ExpiresUtc = expiresUtc;
 
                 string accessToken = _accessTokenFormat.Protect(ticket);
-                return new AuthenticateResponse()
+                return Ok(new AuthenticateResponse()
                 {
                     access_token = accessToken,
                     Expires = expiresUtc.ToString()
-                };
+                });
             }
-            return new AuthenticateResponse { Status = HttpStatusCode.Unauthorized };
+
+            return Unauthorized(new[]
+            {
+                new AuthenticationHeaderValue("Basic"), 
+            });
         }
 
         [Authorize]

@@ -34,7 +34,6 @@ namespace Web.Host
             builder.RegisterInstance(new WoggleDbContext()).As<WoggleDbContext>();
             builder.RegisterType<UserStore<ApplicationUser>>().As<IUserStore<ApplicationUser>>().PropertiesAutowired();
             builder.RegisterType<ApplicationUserManager>().As<IApplicationUserManager>().PropertiesAutowired();
-            
         }
     }
 }
